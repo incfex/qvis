@@ -4,6 +4,29 @@
         <p>To be able to visualize something, you need to load some data. We have several options for that:</p>
 
         <b-container id="FileManagerContainer" class="table-striped" fluid>
+          <b-row class="fileOptionContainer">
+            <b-col cols="1" md="auto"><h3>Option 0</h3></b-col>
+            <b-col>
+                <h3>Load from local file</h3>
+                <div style="margin: 10px 0px;">
+                    <form> 
+                        <b-row>
+                            <b-col>
+                                <b-form-input                  v-model="uriToLoad" id="uriInput" type="text" placeholder="77d9312db885eb79.qlog"></b-form-input>
+                            </b-col>
+                            <b-col cols="1" md="auto"> 
+                                <b-button @click="loadFromLocal()"  :disabled="this.uriToLoad === ''" variant="primary">Load</b-button>
+                            </b-col>
+                        </b-row>
+                    </form>
+                </div>
+                <div>
+                    <p style="margin-top: 5px;">
+                        You can load any qlog file inside `/var/log/bvc`. Just specify the file name, the extension is optional, we will add it for you if it is missing.
+                    </p>
+                </div>
+            </b-col>
+        </b-row>
         <b-row class="fileOptionContainer">
             <b-col cols="1" md="auto"><h3>Option 1</h3></b-col>
             <b-col>
@@ -226,6 +249,7 @@
         protected store:ConnectionStore = getModule(ConnectionStore, this.$store);
 
         protected urlToLoad:string = "";
+        protected uriToLoad:string = "";
         protected secretsToLoad:string = "";
 
         protected filesToUpload:Array<File> = new Array<File>();
@@ -503,7 +527,13 @@
             this.store.loadExamplesForDemo();
         }
 
+        public loadFromLocal() {
+          if (!this.uriToLoad.endsWith(".qlog")) this.uriToLoad += ".qlog"
+          this.store.loadQlogDirectlyFromURL( { url: "bvc_logs/" + this.uriToLoad, filename: this.uriToLoad } )
+        }
+
         public loadMassiveExample(){
+
             let alreadyLoaded = false;
             for (const  group of this.store.groups ){
                 if ( group.filename.indexOf("MASSIVE_DEMO_mvfst_large") >= 0 ){
