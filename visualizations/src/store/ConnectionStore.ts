@@ -367,7 +367,7 @@ export default class ConnectionStore extends VuexModule {
             let fileContents:any = StreamingJSONParser.parseQlogText( fileContentsRaw );
 
             if ( fileContents && !fileContents.error && !fileContents.error_description && fileContents.qlog_version ){
-                this.context.dispatch('addGroupFromQlogFile', {fileContentsJSON: fileContents, fileInfo: { filename:filename }});
+                this.context.commit('addGroupFromQlogFile', {fileContentsJSON: fileContents, fileInfo: { filename:filename }});
 
                 Vue.notify({
                     group: "default",
